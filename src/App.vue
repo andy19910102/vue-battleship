@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <section v-if="!gameStart">
+  <section class="form-section" :style="{ backgroundImage: `url(${seaImage})` }" v-if="!gameStart">
     <form @submit.prevent="formSend">
       <h1>Battleship</h1>
       <div class="form-group">
