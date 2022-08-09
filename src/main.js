@@ -7,10 +7,13 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 /* import specific icons */
-import { faRotate } from '@fortawesome/free-solid-svg-icons'
+import { faRotate, faPowerOff } from '@fortawesome/free-solid-svg-icons'
+import { faGithub } from '@fortawesome/free-brands-svg-icons'
 
 /* add icons to the library */
 library.add(faRotate)
+library.add(faPowerOff)
+library.add(faGithub)
 
 
 createApp(App)

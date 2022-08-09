@@ -26,7 +26,15 @@
           {{ winner }}
         </span>
         ！ 
-        <button class="btn" @click="reloadGame">點我重新開始</button>
+        <br>
+        <button class="btn" @click="reloadGame">
+          <font-awesome-icon icon="fa-solid fa-power-off" />
+          點我重新開始
+        </button>
+        <a class="btn btn-black" href="https://github.com/andy19910102/vue-battleship" target="_blank">
+          <font-awesome-icon icon="fa-brands fa-github" />
+          前往專案首頁
+        </a>
       </h1>
       <div class="sea" :style="{ backgroundImage: `url(${seaImage})` }">
         <div v-for="(row, rowIdx) in map.grids" :key="`row${rowIdx}`" class="row">
@@ -77,7 +85,7 @@ class Map {
     
     this.ships = [
       new Ship(4),
-      new Ship(2)
+      new Ship(3)
     ];
     this.placeShipMode = true;
     this.placeShipLength = this.ships[0].length;

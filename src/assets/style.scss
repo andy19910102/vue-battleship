@@ -101,6 +101,7 @@ $grid-size: 100px;
 
 
 $btn-bg: #11998e;
+$btn-black-bg: #3a3a3a;
 
 .btn {
     background: $btn-bg;
@@ -108,14 +109,28 @@ $btn-bg: #11998e;
     border-radius: 4px;
     color: #fff;
     cursor: pointer;
+    display: inline-block;
     font-size: 20px;
     padding: 10px 18px;
     margin-right: 10px;
+    text-decoration: none;
+    font-weight: 700;
     &:hover {
         background: darken($btn-bg, 3%);
     }
 
     &:active {
         background: darken($btn-bg, 5%);
+    }
+}
+
+.btn.btn-black {
+    background: $btn-black-bg;
+    &:hover {
+        background: darken($btn-black-bg, 3%);
+    }
+
+    &:active {
+        background: darken($btn-black-bg, 5%);
     }
 }
