@@ -1,9 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Lobster&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu&display=swap');
+
 .row {
     display: flex;
 }
 
 h1 {
-    font-size: 42px;
+    font-size: 40px;
+    font-family: 'Lobster', cursive;
+}
+
+form {
+    max-width: 600px;
+    padding: 20px;
+    box-shadow: 0px 3px 5px rgba(0,0,0,.5);
+    margin: 50px auto;
+    transition: all .3s ease;
+    &:hover {
+        box-shadow: 0px 50px 100px rgba(0,0,0,.5),  0px 0px 0px 10px rgba(0,0,0,.5);
+    }
+    h1 {
+        margin-top: 0px;
+        text-align: center;
+    }
+}
+
+.form-group {
+    margin-bottom: 15px;
+    label {
+        font-size: 18px;
+        font-weight: 700;
+        font-family: 'Ubuntu', sans-serif;
+    }
+    .form-control {
+        font-family: 'Ubuntu', sans-serif;
+        width: 100%;
+        display: block;
+        padding: 10px 10px;
+        font-size: 18px;
+        margin-top: 10px;
+        border-radius: 4px;
+        border: 1px solid rgba(0,0,0,.25);
+        outline: none;
+        transition: all .3s ease;
+        &:focus,
+        &:active {
+            border-color: #FF416C;
+            box-shadow: 0 0 0 3px #FF416C88;
+        }
+    }
 }
 
 .text-center {
@@ -14,8 +59,7 @@ h1 {
     background: aqua;
     width: fit-content;
     background-size: cover;
-    margin: 0 auto;
-    margin-bottom: 15px;
+    margin: 15px auto;
 }
 
 $grid-size: 100px;
@@ -100,10 +144,11 @@ $grid-size: 100px;
 }
 
 
-$btn-bg: #11998e;
+$btn-bg: #FF416C;
 $btn-black-bg: #3a3a3a;
 
 .btn {
+    font-family: 'Lobster', cursive;
     background: $btn-bg;
     border: none;
     border-radius: 4px;

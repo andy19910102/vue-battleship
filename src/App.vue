@@ -2,73 +2,98 @@
 </script>
 
 <template>
-  <div v-for="map, mapIdx in maps" :key="map.name">
-    <section v-if="gameRound % 2 == mapIdx" :class="[{ 'place-ship-mode': map.placeShipMode}, {'attack-mode': !map.placeShipMode }, 'text-center']">
-      <h1 v-if="gameOn">
-        <span v-if="map.placeShipMode">
-          請 
-          <span :style="{ 'color': getPlayerColor(map.name) }">
-            {{ map.name }}
-          </span>
-          部署船艦
-        </span>
-        <span v-if="!map.placeShipMode">
-          請
-          <span :style="{ 'color': getPlayerColor(maps[(gameRound+1) % 2].name) }">
-          {{ maps[(gameRound+1) % 2].name }}
-          </span>
-          開始攻擊!
-        </span>
-      </h1>
-      <h1 v-if="!gameOn">
-        遊戲結束！這場遊戲的贏家為 
-        <span :style="{ 'color': getPlayerColor(winner) }">
-          {{ winner }}
-        </span>
-        ！ 
-        <br>
-        <button class="btn" @click="reloadGame">
-          <font-awesome-icon icon="fa-solid fa-power-off" />
-          點我重新開始
+  <section v-if="!gameStart">
+    <form @submit.prevent="formSend">
+      <h1>Battleship</h1>
+      <div class="form-group">
+        <label>Player 1</label>
+        <input v-model="player1" type="text" placeholder="Enter the name of player 1" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Player 2</label>
+        <input v-model="player2" type="text" placeholder="Enter the name of player 2" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label>Mode</label>
+        <select v-model="selectedMapSize" class="form-control">
+          <option v-for="opt in mapSizeOptions" :key="opt.value" :value="opt.value">{{ opt.name }}</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <button class="btn">
+           <font-awesome-icon icon="fa-solid fa-anchor" />
+            Start Game
         </button>
-        <a class="btn btn-black" href="https://github.com/andy19910102/vue-battleship" target="_blank">
-          <font-awesome-icon icon="fa-brands fa-github" />
-          前往專案首頁
-        </a>
-      </h1>
-      <div class="sea" :style="{ backgroundImage: `url(${seaImage})` }">
-        <div v-for="(row, rowIdx) in map.grids" :key="`row${rowIdx}`" class="row">
-          <div
-            v-for="(grid, gridIdx) in row"
-            :key="`row${rowIdx}grid${gridIdx}`"
-            class="grid"
-          >
-            <button
-              :class="[
-                {
-                  'has-ship': grid.hasShip,
-                  'has-been-attacked': grid.hasBeenAttacked,
-                  'place-ship-preview': grid.placeShipPreview,
-                },
-              ]"
-              @mouseenter="showShipPreview(map,grid)"
-              @mouseleave="unshowShipPreview(map,grid)"
-              @click="onBtnClick(map, grid)"
-              :disabled="grid.disabled"
+      </div>
+    </form>
+  </section>
+  <section v-if="gameStart">
+    <div v-for="map, mapIdx in maps" :key="map.name">
+      <section v-if="gameRound % 2 == mapIdx" :class="[{ 'place-ship-mode': map.placeShipMode}, {'attack-mode': !map.placeShipMode }, 'text-center']">
+        <h1 v-if="gameOn">
+          <span v-if="map.placeShipMode">
+            <span :style="{ 'color': getPlayerColor(map.name) }">
+              {{ map.name }}
+            </span>,
+            deploy your ships.
+          </span>
+          <span v-if="!map.placeShipMode">
+            <span :style="{ 'color': getPlayerColor(maps[(gameRound+1) % 2].name) }">
+            {{ maps[(gameRound+1) % 2].name }}
+            </span>,
+            it's your turn to attack.
+          </span>
+        </h1>
+        <h1 v-if="!gameOn">
+          Game over! The winner is
+          <span :style="{ 'color': getPlayerColor(winner) }">
+            {{ winner }}
+          </span>
+          ！ 
+          <br>
+          <button class="btn" @click="reloadGame">
+            <font-awesome-icon icon="fa-solid fa-power-off" />
+            Restart Game
+          </button>
+          <a class="btn btn-black" href="https://github.com/andy19910102/vue-battleship" target="_blank">
+            <font-awesome-icon icon="fa-brands fa-github" />
+            Github Repo
+          </a>
+        </h1>
+        <div v-if="map.placeShipMode">
+          <button class="btn" @click="changeDirection(map)">
+            <font-awesome-icon icon="fa-solid fa-rotate" />
+            Turn direction
+          </button>
+        </div>
+        <div class="sea" :style="{ backgroundImage: `url(${seaImage})` }">
+          <div v-for="(row, rowIdx) in map.grids" :key="`row${rowIdx}`" class="row">
+            <div
+              v-for="(grid, gridIdx) in row"
+              :key="`row${rowIdx}grid${gridIdx}`"
+              class="grid"
             >
-              <img class="explode-img" v-if="grid.hasBeenAttacked && grid.hasShip" :src="explosionImage">
-            </button>
+              <button
+                :class="[
+                  {
+                    'has-ship': grid.hasShip,
+                    'has-been-attacked': grid.hasBeenAttacked,
+                    'place-ship-preview': grid.placeShipPreview,
+                  },
+                ]"
+                @mouseenter="showShipPreview(map,grid)"
+                @mouseleave="unshowShipPreview(map,grid)"
+                @click="onBtnClick(map, grid)"
+                :disabled="grid.disabled"
+              >
+                <img class="explode-img" v-if="grid.hasBeenAttacked && grid.hasShip" :src="explosionImage">
+              </button>
+            </div>
           </div>
         </div>
-      </div>
-      <div>
-        <button v-if="map.placeShipMode" class="btn" @click="changeDirection(map)">
-          <font-awesome-icon icon="fa-solid fa-rotate" />
-          Turn direction
-        </button>
-      </div>
-    </section>
-  </div>
+      </section>
+    </div>
+  </section>
 </template>
 
 <style lang="scss" scoped>
@@ -146,6 +171,7 @@ export default {
   name: "App",
   data() {
     return {
+      gameStart: false,
       gameOn: true,
       gameRound: 0,
       width: 5,
@@ -154,7 +180,15 @@ export default {
       grids: [],
       winner: "",
       explosionImage: explosionImage,
-      seaImage: seaImage
+      seaImage: seaImage,
+      player1: "Player 1",
+      player2: "Player 2",
+      selectedMapSize: 5,
+      mapSizeOptions: [
+        { value: 5, name: "5x5" },
+        { value: 7, name: "7x7" },
+        { value: 9, name: "9x9" }
+      ]
     };
   },
   methods: {
@@ -187,7 +221,7 @@ export default {
         if (map.placedShips >= map.ships.length) {
           
           setTimeout(() => {
-            alert(`${map.name}已部署好船艦`)
+            alert(`${map.name} has deployed all the ships.`)
             map.placeShipMode = false;
             map.placeShipLength = 0;
             this.gameRound += 1;
@@ -268,7 +302,7 @@ export default {
         if (map.survivalShips <= 0) {
           this.gameOn = false;
           this.winner = attacker;
-          alert(`遊戲結束，贏家為${this.winner}`);
+          alert(`Game over! The winner is ${this.winner}`);
           return;
         }
         this.gameRound += 1;
@@ -295,12 +329,19 @@ export default {
       }
       return true;
     },
+    formSend() {
+      const vm = this;
+      const player1Map = new Map(vm.player1, vm.selectedMapSize, this.selectedMapSize);
+      const player2Map = new Map(vm.player2, vm.selectedMapSize, this.selectedMapSize);
+      vm.maps = [player1Map, player2Map];
+      vm.gameStart = !vm.gameStart;
+    }
   },
   created() {
-    const vm = this;
-    const playerMap = new Map("玩家1", this.width, this.height);
-    const comMap = new Map("玩家2", this.width, this.height);
-    vm.maps = [playerMap, comMap];
+    // const vm = this;
+    // const playerMap = new Map("玩家1", this.width, this.height);
+    // const comMap = new Map("玩家2", this.width, this.height);
+    // vm.maps = [playerMap, comMap];
   },
 };
 </script>
